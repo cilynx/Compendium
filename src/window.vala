@@ -19,11 +19,25 @@
 namespace Compendium {
 	[GtkTemplate (ui = "/com/wolfteck/Compendium/window.ui")]
 	public class Window : Gtk.ApplicationWindow {
-		[GtkChild]
-		Gtk.Label label;
-
 		public Window (Gtk.Application app) {
 			Object (application: app);
+
+			Gtk.Notebook notebook = new Gtk.Notebook ();
+			this.add (notebook);
+
+			var finance_tab     = new FinanceTab ();
+			var vehicle_tab     = new VehicleTab ();
+			var house_tab       = new HouseTab ();
+			var pool_tab        = new PoolTab ();
+			var wishlist_tab    = new WishlistTab ();
+
+			notebook.append_page (finance_tab.content,  finance_tab.title);
+			notebook.append_page (vehicle_tab.content,  vehicle_tab.title);
+			notebook.append_page (house_tab.content,    house_tab.title);
+			notebook.append_page (pool_tab.content,     pool_tab.title);
+			notebook.append_page (wishlist_tab.content, wishlist_tab.title);
+
+			show_all ();
 		}
 	}
 }

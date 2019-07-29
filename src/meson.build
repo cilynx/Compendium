@@ -1,6 +1,11 @@
 compendium_sources = [
   'main.vala',
   'window.vala',
+  'tabs/finance.vala',
+  'tabs/house.vala',
+  'tabs/pool.vala',
+  'tabs/vehicle.vala',
+  'tabs/wishlist.vala',
 ]
 
 compendium_deps = [
