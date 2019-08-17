@@ -1,4 +1,4 @@
-project('compendium', ['c', 'vala'], 
+project('compendium',  
         version: '0.1.0',
   meson_version: '>= 0.40.0',
 )

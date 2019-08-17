@@ -1,26 +1,35 @@
-compendium_sources = [
-  'main.vala',
-  'window.vala',
-  'tabs/finance.vala',
-  'tabs/house.vala',
-  'tabs/pool.vala',
-  'tabs/vehicle.vala',
-  'tabs/wishlist.vala',
-]
-
-compendium_deps = [
-  dependency('gio-2.0', version: '>= 2.50'),
-  dependency('gtk+-3.0', version: '>= 3.22'),
-]
-
+pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
+moduledir = join_paths(pkgdatadir, 'compendium')
 gnome = import('gnome')
 
-compendium_sources += gnome.compile_resources('compendium-resources',
+gnome.compile_resources('compendium',
   'compendium.gresource.xml',
-  c_name: 'compendium'
+  gresource_bundle: true,
+  install: true,
+  install_dir: pkgdatadir,
 )
 
-executable('compendium', compendium_sources,
-  vala_args: '--target-glib=2.50',  dependencies: compendium_deps,
+python3 = import('python3')
+
+conf = configuration_data()
+conf.set('PYTHON', python3.find_python().path())
+conf.set('VERSION', meson.project_version())
+conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
+conf.set('pkgdatadir', pkgdatadir)
+
+configure_file(
+  input: 'compendium.in',
+  output: 'compendium',
+  configuration: conf,
   install: true,
+  install_dir: get_option('bindir')
 )
+
+compendium_sources = [
+  '__init__.py',
+  'main.py',
+  'window.py',
+  'finance.py'
+]
+
+install_data(compendium_sources, install_dir: moduledir)

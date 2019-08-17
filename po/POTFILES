@@ -2,6 +2,6 @@ data/com.wolfteck.Compendium.desktop.in
 data/com.wolfteck.Compendium.appdata.xml.in
 data/com.wolfteck.Compendium.gschema.xml
 src/window.ui
-src/main.vala
-src/window.vala
+src/main.py
+src/window.py
 
