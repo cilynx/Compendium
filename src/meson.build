@@ -29,7 +29,8 @@ compendium_sources = [
   '__init__.py',
   'main.py',
   'window.py',
-  'finance.py'
+  'finance/finance_tab.py',
+  'finance/account.py'
 ]
 
 install_data(compendium_sources, install_dir: moduledir)

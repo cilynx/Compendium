@@ -28,7 +28,7 @@ class CompendiumWindow(Gtk.ApplicationWindow):
         notebook = Gtk.Notebook()
         self.add(notebook)
 
-        from .finance import FinanceTab
+        from .finance_tab import FinanceTab
         finance_tab = FinanceTab()
 
         notebook.append_page(finance_tab.content, finance_tab.title)
