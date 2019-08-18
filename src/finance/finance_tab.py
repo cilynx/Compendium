@@ -8,18 +8,10 @@ class FinanceTab(GObject.Object):
         self.content = Gtk.Notebook()
         self.content.set_tab_pos(Gtk.PositionType.LEFT)
 
-        self.new_account_id = Gtk.Label("+")
+        button = Gtk.Button("Populate from OFX")
+        button.connect("clicked", self.on_button_clicked)
 
-        self.listbox = Gtk.ListBox()
-
-        row = Gtk.ListBoxRow()
-        self.button = Gtk.Button("Populate from OFX")
-        self.button.connect("clicked", self.on_button_clicked)
-        row.add(self.button)
-
-        self.listbox.add(row)
-
-        self.content.append_page(self.listbox, self.new_account_id)
+        self.content.append_page(button, Gtk.Label("+"))
 
     def on_button_clicked(self, widget):
         dialog = Gtk.FileChooserDialog("Please choose a file", None, Gtk.FileChooserAction.OPEN,

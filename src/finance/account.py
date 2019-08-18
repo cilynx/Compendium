@@ -7,17 +7,24 @@ class AccountTab():
         with open(filename, 'r') as fileobj:
             from ofxparse import OfxParser
             ofx = OfxParser.parse(fileobj)
-        self.store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_FLOAT)
-        self.content = Gtk.TreeView(self.store)
-        for column_title, i in enumerate(["Date", "Memo", "Amount"]):
-            renderer = Gtk.CellRendererText()
-            column = Gtk.TreeViewColumn(i, renderer, text=column_title)
-            self.content.append_column(column)
+        self.store = Gtk.ListStore(GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING, GObject.TYPE_STRING)
+        treeview = Gtk.TreeView(self.store)
+        for i, column_title in enumerate(["Date", "Memo", "Withdrawal", "Deposit"]):
+            cell = Gtk.CellRendererText()
+            column = Gtk.TreeViewColumn(column_title, cell, text=i)
+            if column_title in ("Withdrawal", "Deposit"):
+                cell.set_alignment(1, 0.5)
+            treeview.append_column(column)
 
         account = ofx.account
-        self.label = Gtk.Label(account.account_id)
-
         statement = account.statement
 
         for transaction in statement.transactions:
-            self.store.append([transaction.date.strftime("%m/%d/%Y, %H:%M:%S"), transaction.memo, transaction.amount])
+            if transaction.amount < 0:
+                self.store.append([transaction.date.strftime("%m/%d/%Y"), transaction.memo, '{:2f}'.format(transaction.amount), None])
+            else:
+                self.store.append([transaction.date.strftime("%m/%d/%Y"), transaction.memo, None, '{:2f}'.format(transaction.amount)])
+
+        self.label = Gtk.Label(account.account_id)
+        self.content = Gtk.ScrolledWindow()
+        self.content.add(treeview)
