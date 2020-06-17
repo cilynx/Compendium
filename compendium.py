@@ -60,7 +60,8 @@ class MainPanel(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
-        self.nb = wx.aui.AuiNotebook(self)
+#        self.nb = wx.aui.AuiNotebook(self)
+        self.nb = wx.Notebook(self)
 
         pages = [(AccountsTab(self.nb), "Accounts"),
                  (OrganizationsTab(self.nb), "Organizations")]
@@ -70,8 +71,10 @@ class MainPanel(wx.Panel):
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(self.nb, 1, wx.EXPAND)
         self.SetSizer(sizer)
-        self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
-        self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
+#        self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+#        self.Bind(wx.aui.EVT_AUINOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
+        self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
+        self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
 
     def OnPageChanged(self, event):
         old = event.GetOldSelection()
