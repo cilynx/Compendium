@@ -2,6 +2,26 @@
 import wx
 import wx.aui
 
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy import create_engine
+
+engine = create_engine('sqlite:///compendium.db')
+Session = sessionmaker(bind=engine)
+session = Session()
+Base = declarative_base()
+
+class Account(Base):
+    __tablename__ = 'account'
+    id = Column(Integer, primary_key=True)
+    last_four = Column(String, nullable=False)
+    issuer_id = Column(Integer, nullable=False)
+    user_id = Column(Integer, nullable=False)
+
+    def __repr__(self):
+        return '<Account %r>' % self.last_four
+
 class AccountsTab(wx.Panel):
     """
     Accounts top-level tab
