@@ -2,9 +2,9 @@
 import wx
 import wx.aui
 
-class TabPanel(wx.Panel):
+class AccountsTab(wx.Panel):
     """
-    This will be the first notebook tab
+    Accounts top-level tab
     """
     def __init__(self, parent):
         """"""
@@ -21,8 +21,26 @@ class TabPanel(wx.Panel):
 
         self.SetSizer(sizer)
 
+class OrganizationsTab(wx.Panel):
+    """
+    Accounts top-level tab
+    """
+    def __init__(self, parent):
+        """"""
 
-class DemoPanel(wx.Panel):
+        wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
+
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        txtOne = wx.TextCtrl(self, wx.ID_ANY, "")
+        txtTwo = wx.TextCtrl(self, wx.ID_ANY, "")
+
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(txtOne, 0, wx.ALL, 5)
+        sizer.Add(txtTwo, 0, wx.ALL, 5)
+
+        self.SetSizer(sizer)
+
+class MainPanel(wx.Panel):
     """
     This will be the first notebook tab
     """
@@ -35,9 +53,8 @@ class DemoPanel(wx.Panel):
         self.nb = wx.aui.AuiNotebook(self)
 
         # add some pages to the notebook
-        pages = [(TabPanel(self.nb), "Tab 1"),
-                 (TabPanel(self.nb), "Tab 2"),
-                 (TabPanel(self.nb), "Tab 3")]
+        pages = [(AccountsTab(self.nb), "Accounts"),
+                 (OrganizationsTab(self.nb), "Organizations")]
         for page, label in pages:
             self.nb.AddPage(page, label)
 
@@ -73,7 +90,7 @@ class MainWindow(wx.Frame):
     def CreateInteriorWindowComponents(self):
         ''' Create "interior" window components. In this case it is just a
             simple multiline text control. '''
-        DemoPanel(self)
+        MainPanel(self)
 #        self.control = wx.TextCtrl(self, style=wx.TE_MULTILINE)
 
     def CreateExteriorWindowComponents(self):
@@ -107,7 +124,7 @@ class MainWindow(wx.Frame):
     def SetTitle(self):
         # MainWindow.SetTitle overrides wx.Frame.SetTitle, so we have to
         # call it using super:
-        super(MainWindow, self).SetTitle('Editor %s'%self.filename)
+        super(MainWindow, self).SetTitle('Compendium %s'%self.filename)
 
 
     # Helper methods:
@@ -134,8 +151,7 @@ class MainWindow(wx.Frame):
     # Event handlers:
 
     def OnAbout(self, event):
-        dialog = wx.MessageDialog(self, 'A sample editor\n'
-            'in wxPython', 'About Sample Editor', wx.OK)
+        dialog = wx.MessageDialog(self, 'Compendium is a highly-opinionated PIM.', 'About Compendium', wx.OK)
         dialog.ShowModal()
         dialog.Destroy()
 
