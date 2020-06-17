@@ -2,52 +2,48 @@
 import wx
 import wx.aui
 
-from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy import create_engine
+from active_alchemy import ActiveAlchemy
 
-engine = create_engine('sqlite:///compendium.db')
-Session = sessionmaker(bind=engine)
-session = Session()
-Base = declarative_base()
+db = ActiveAlchemy('sqlite:///compendium.db')
 
-class Account(Base):
-    __tablename__ = 'account'
-    id = Column(Integer, primary_key=True)
-    last_four = Column(String, nullable=False)
-    issuer_id = Column(Integer, nullable=False)
-    user_id = Column(Integer, nullable=False)
+class Account(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    last_four = db.Column(db.String, nullable=False)
+    issuer_id = db.Column(db.Integer, nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return '<Account %r>' % self.last_four
 
 class AccountsTab(wx.Panel):
-    """
-    Accounts top-level tab
-    """
     def __init__(self, parent):
-        """"""
-
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
+        nb = wx.Notebook(self, wx.ID_ANY, style=wx.NB_LEFT)
+
+        print('Before iterating Accounts')
+        for account in Account.query().all():
+            print('Adding account: ', account)
+            nb.AddPage(AccountTab(nb), account.last_four)
+        print('After iterating Accounts')
+
         sizer = wx.BoxSizer(wx.VERTICAL)
+        sizer.Add(nb, 1, wx.EXPAND)
+
+        self.SetSizer(sizer)
+
+class AccountTab(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
         txtOne = wx.TextCtrl(self, wx.ID_ANY, "")
-        txtTwo = wx.TextCtrl(self, wx.ID_ANY, "")
 
         sizer = wx.BoxSizer(wx.VERTICAL)
         sizer.Add(txtOne, 0, wx.ALL, 5)
-        sizer.Add(txtTwo, 0, wx.ALL, 5)
 
         self.SetSizer(sizer)
 
 class OrganizationsTab(wx.Panel):
-    """
-    Accounts top-level tab
-    """
     def __init__(self, parent):
-        """"""
-
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
         sizer = wx.BoxSizer(wx.VERTICAL)
@@ -61,18 +57,11 @@ class OrganizationsTab(wx.Panel):
         self.SetSizer(sizer)
 
 class MainPanel(wx.Panel):
-    """
-    This will be the first notebook tab
-    """
-    #----------------------------------------------------------------------
     def __init__(self, parent):
-        """"""
         wx.Panel.__init__(self, parent=parent, id=wx.ID_ANY)
 
-        # create the AuiNotebook instance
         self.nb = wx.aui.AuiNotebook(self)
 
-        # add some pages to the notebook
         pages = [(AccountsTab(self.nb), "Accounts"),
                  (OrganizationsTab(self.nb), "Organizations")]
         for page, label in pages:
